@@ -1,5 +1,7 @@
 # WasteIQ Event Reindexer
 
+Find import commands and eventBlocks. Then allow the user to re-index and/or delete things.
+
 ## Start in Docker Services
 
 Given the rediculous name, my-mongo:
