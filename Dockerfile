@@ -21,8 +21,6 @@ ENV PATH /code/node_modules/.bin:$PATH
 # copy in our source code last, as it changes the most
 COPY ./index.js /code
 COPY ./build /code/build
-COPY ./keys /code/keys/
-COPY ./public /code/public/
 
 # RUN apk add --update bash && rm -rf /var/cache/apk/*
 
