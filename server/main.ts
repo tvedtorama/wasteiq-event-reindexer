@@ -1,5 +1,6 @@
 import {MongoClient, ObjectID} from 'mongodb'
 import {prompt} from 'inquirer'
+import {Maybe} from 'monet'
 import {default as Axios} from 'axios'
 
 type IOptionTyple = "Nothing" | "delete blocks & re-index" | "re-index" | "delete COMMAND & blocks!!!"
@@ -30,12 +31,17 @@ const action = async (a: IOptionTyple, ids: string[], mainDb) => {
 
 export default async () => {
 	const mongoUrl = process.env.MONGO_URL
+	const limit = parseInt(process.env.LIMIT || "20")
+	const serviceClassFilter = Maybe.
+		fromUndefined(process.env.SERVICE_CLASS).
+		map(serviceClass => (<{"payload.serviceClass"?}>{["payload.serviceClass"]: serviceClass})).
+		orSome({})
 	const client = await MongoClient.connect(mongoUrl)
 	const mainDb = client.db("main")
 	const result = await mainDb.collection("command").
-		find({type: "IMPORT_EVENT_BLOCK"}).
+		find({type: "IMPORT_EVENT_BLOCK", ...serviceClassFilter}).
 		project({"payload.dataWindowStart": 1, "payload.serviceClass": 1}).
-		sort({"payload.dataWindowStart": -1}).limit(20)
+		sort({"payload.dataWindowStart": -1}).limit(limit)
 	const results = (<{payload: {dataWindowStart: number, serviceClass}, _id: ObjectID}[]>await result.toArray()).filter(x => x.payload.dataWindowStart)
 
 	const cmdIds = results.map(x => x._id.toHexString())

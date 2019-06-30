@@ -2,6 +2,11 @@
 
 Find import commands and eventBlocks. Then allow the user to re-index and/or delete things.
 
+## Envs
+
+LIMIT - number of items to fetch
+SERVICE_CLASS - filter by a given service class
+
 ## Start in Docker Services
 
 Given the rediculous name, my-mongo:
